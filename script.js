@@ -1,3 +1,4 @@
+const API_KEY = "de0e5df4ca8a3596996e6b3514d95d0b";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 const mainDiv = document.querySelector("#main");
 const searchForm = document.querySelector("#form");

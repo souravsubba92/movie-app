@@ -1,8 +1,5 @@
 const API_KEY = "de0e5df4ca8a3596996e6b3514d95d0b";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
-const mainDiv = document.querySelector("#main");
-const searchForm = document.querySelector("#form");
-const searchInput = document.querySelector("#search");
 
 const options = {
   method: "GET",
@@ -12,6 +9,10 @@ const options = {
       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZTBlNWRmNGNhOGEzNTk2OTk2ZTZiMzUxNGQ5NWQwYiIsInN1YiI6IjY0YmQzOTkxYWQ1MGYwMDBhZTc2MjA1ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6Nzb76CLZ7fmRP9-8Y9u7IWrQ2FjqUiVwr4i5Vf1puA",
   },
 };
+
+const mainDiv = document.querySelector("#main");
+const searchForm = document.querySelector("#form");
+const searchInput = document.querySelector("#search");
 
 //fetching Data function from the api's
 const fetchData = async (url) => {
@@ -188,3 +189,59 @@ searchInput.addEventListener("input", () => {
     fetchPopularMovies();
   }
 });
+
+///////////////////////////////////////////////////Pagination////////////////////////////////////////////
+
+//  pagination elements
+const prevPage = document.querySelector("#prev");
+const currentPage = document.querySelector("#current");
+const nextPage = document.querySelector("#next");
+
+// Variable for storing page number
+let page = 1;
+
+// Function to update the pagination status
+const updatePagination = () => {
+  currentPage.innerText = page;
+  prevPage.classList.toggle("disabled", page === 1);
+};
+
+// Function to fetch movies based on the current page number
+const fetchMoviesByPage = async (page) => {
+  const popularMoviesUrl = `https://api.themoviedb.org/3/movie/popular?page=${page}`;
+  const movieData = await fetchData(popularMoviesUrl);
+  console.log(movieData);
+  showMovies(movieData);
+};
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+
+// Function to go to the previous page
+const goToPrevPage = () => {
+  if (page > 1) {
+    page--;
+    updatePagination();
+    fetchMoviesByPage(page);
+    scrollToTop();
+  }
+};
+
+// Function to go to the next page
+const goToNextPage = () => {
+  page++;
+  updatePagination();
+  fetchMoviesByPage(page);
+  scrollToTop();
+};
+
+// Adding event listeners for previous and next page buttons
+prevPage.addEventListener("click", goToPrevPage);
+nextPage.addEventListener("click", goToNextPage);
+
+// Fetch popular movies by page number
+fetchMoviesByPage(page);
